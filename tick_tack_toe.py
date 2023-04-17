@@ -24,62 +24,72 @@ def enter_move(board):
         enter_move(board)
     else:
         row = 0 if user_move < 4 else 1 if user_move < 7 else 2
-        column = 2 if user_move == 9 else (user_move % 3) - 1
-        if board[row][column] == 'X' or board[row][column] == 'O':
+        column = 0 if user_move % 3 == 1 else 1 if user_move % 3 == 2 else 2
+        if (row, column) in make_list_of_free_fields(board):
+            board[row][column] = 'O'
+        else:
             print('This cell is already filled in.')
             enter_move(board)
-        else:
-            board[row][column] = 'O'
-            display_board(board)
 
 
-# def make_list_of_free_fields(board):
-#     # The function browses the board and builds a list of all the free squares;
-#     # the list consists of tuples, while each tuple is a pair of row and column numbers.
+def make_list_of_free_fields(board):
+    # The function browses the board and builds a list of all the free squares;
+    # the list consists of tuples, while each tuple is a pair of row and column numbers.
+    list = []
+    for row in board:
+        for col in row:
+            if col != "X" and col != 'O':
+                list.append((board.index(row), row.index(col)))
+    return list
 
 
 def victory_for(board, sign):
     # The function analyzes the board's status in order to check if
     # the player using 'O's or 'X's has won the game
     if board[0][0] == sign and board[0][1] == sign and board[0][2] == sign:
-        return False
-    elif board[1][0] == sign and board[1][1] == sign and board[1][2] == sign:
-        return False
-    elif board[2][0] == sign and board[2][1] == sign and board[2][2] == sign:
-        return False
-    elif board[0][0] == sign and board[1][0] == sign and board[2][0] == sign:
-        return False
-    elif board[0][1] == sign and board[1][1] == sign and board[2][1] == sign:
-        return False
-    elif board[0][2] == sign and board[1][2] == sign and board[2][2] == sign:
-        return False
-    elif board[0][0] == sign and board[1][1] == sign and board[2][2] == sign:
-        return False
-    elif board[0][2] == sign and board[1][1] == sign and board[2][0] == sign:
-        return False
-    else:
         return True
+    elif board[1][0] == sign and board[1][1] == sign and board[1][2] == sign:
+        return True
+    elif board[2][0] == sign and board[2][1] == sign and board[2][2] == sign:
+        return True
+    elif board[0][0] == sign and board[1][0] == sign and board[2][0] == sign:
+        return True
+    elif board[0][1] == sign and board[1][1] == sign and board[2][1] == sign:
+        return True
+    elif board[0][2] == sign and board[1][2] == sign and board[2][2] == sign:
+        return True
+    elif board[0][0] == sign and board[1][1] == sign and board[2][2] == sign:
+        return True
+    elif board[0][2] == sign and board[1][1] == sign and board[2][0] == sign:
+        return True
+    else:
+        return False
 
 
 def draw_move(board):
     # The function draws the computer's move and updates the board.
     computers_move = randrange(1, 10)
     row = 0 if computers_move < 4 else 1 if computers_move < 7 else 2
-    column = 2 if computers_move == 9 else (computers_move % 3) - 1
-    if board[row][column] == 'X' or board[row][column] == 'O':
-        draw_move(board)
-    else:
-        print("X is playnig:")
+    column = 0 if computers_move % 3 == 1 else 1 if computers_move % 3 == 2 else 2
+    if (row, column) in make_list_of_free_fields(board):
         board[row][column] = 'X'
-        display_board(board)
+    else:
+        draw_move(board)
 
 
 board[1][1] = 'X'
-while count < 8 and victory_for(board, sign):
+
+while True:
     if victory_for(board, 'O'):
         print('You won!')
+        break
     elif victory_for(board, "X"):
-        print('Computer won.')
+        print('Computer won!')
+        break
+    elif count > 8:
+        print('Draw')
+        break
     enter_move(board)
     draw_move(board)
+    display_board(board)
     count += 1
