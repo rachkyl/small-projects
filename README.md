@@ -1,1 +1,1 @@
-# Repository where i store my small projects
+# Repository where I store my small projects
